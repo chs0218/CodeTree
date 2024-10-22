@@ -66,7 +66,10 @@ int main() {
             int newY = cur.first + dy[i];
             int newX = cur.second + dx[i];
 
-            if (grid[newY][newX] == -1) ++ans;
+            if (IsValidCoord(newY, newX) && grid[newY][newX] == -1) 
+            {
+                ++ans;
+            }
         }
     }
     cout << ans;
