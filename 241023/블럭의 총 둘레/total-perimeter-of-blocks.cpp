@@ -1,28 +1,74 @@
 #include <iostream>
+#include <memory.h>
+#include <queue>
 using namespace std;
+int n;
+int grid[101][101];
+bool bVisited[101][101];
+int dx[4] = { -1, 0, 1, 0 };
+int dy[4] = { 0, -1, 0, 1 };
+bool IsValidCoord(int y, int x)
+{
+    if (x < 0) return false;
+    if (y < 0) return false;
+    if (x > 100) return false;
+    if (y > 100) return false;
+    return true;
+}
+void Initialize()
+{
+    memset(bVisited, false, sizeof(bVisited));
 
+    queue<pair<int, int>> q;
+    grid[0][0] = -1;
+    q.push({ 0, 0 });
+
+    while (!q.empty())
+    {
+        pair<int, int> cur = q.front();
+        q.pop();
+
+        for (int i = 0; i < 4; ++i)
+        {
+            int newY = cur.first + dy[i];
+            int newX = cur.second + dx[i];
+            if (IsValidCoord(newY, newX) && grid[newY][newX] == 0 && !bVisited[newY][newX])
+            {
+                bVisited[newY][newX] = true;
+                grid[newY][newX] = -1;
+                q.push({ newY, newX });
+            }
+        }
+    }
+}
 int main() {
-    int n;
     cin >> n;
 
-    int r, c;
-    int minR, minC, maxR, maxC;
-
-    cin >> minR >> minC;
-    maxR = minR;
-    maxC = minC;
-    for(int i = 0; i < n; ++i)
+    queue<pair<int, int>> q;
+    for (int i = 0; i < n; ++i)
     {
+        int r, c;
         cin >> r >> c;
-        maxR = max(maxR, r);
-        minR = min(minR, r);
-        maxC = max(maxC, c);
-        minC = min(minC, c);
+        grid[r][c] = 1;
+        q.push({ r, c });
     }
 
-    int width = maxC - (minC - 1);
-    int height = maxR - (minR - 1);
+    Initialize();
 
-    cout << width * 2 + height * 2;
+    int ans = 0;
+    while (!q.empty())
+    {
+        pair<int, int> cur = q.front();
+        q.pop();
+
+        for (int i = 0; i < 4; ++i)
+        {
+            int newY = cur.first + dy[i];
+            int newX = cur.second + dx[i];
+
+            if (grid[newY][newX] == -1) ++ans;
+        }
+    }
+    cout << ans;
     return 0;
 }
