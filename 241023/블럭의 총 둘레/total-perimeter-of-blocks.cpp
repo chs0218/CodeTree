@@ -3,16 +3,16 @@
 #include <queue>
 using namespace std;
 int n;
-int grid[101][101];
-bool bVisited[101][101];
+int grid[102][102];
+bool bVisited[102][102];
 int dx[4] = { -1, 0, 1, 0 };
 int dy[4] = { 0, -1, 0, 1 };
 bool IsValidCoord(int y, int x)
 {
     if (x < 0) return false;
     if (y < 0) return false;
-    if (x > 100) return false;
-    if (y > 100) return false;
+    if (x > 101) return false;
+    if (y > 101) return false;
     return true;
 }
 void Initialize()
@@ -66,12 +66,10 @@ int main() {
             int newY = cur.first + dy[i];
             int newX = cur.second + dx[i];
 
-            if (IsValidCoord(newY, newX) && grid[newY][newX] == -1) 
-            {
-                ++ans;
-            }
+            if (grid[newY][newX] == -1) ++ans;
         }
     }
     cout << ans;
+
     return 0;
 }
