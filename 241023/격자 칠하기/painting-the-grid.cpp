@@ -83,7 +83,7 @@ int main() {
             {
                 if (!bVisited[i][j])
                 {
-                    int nColoredGrid = dfs(i, j, d);
+                    int nColoredGrid = bfs(i, j, d);
                     maxColorGrid = max(maxColorGrid, nColoredGrid);
                 }  
             }
