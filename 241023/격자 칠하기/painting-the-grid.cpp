@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 #include <memory.h>
 using namespace std;
 int n;
@@ -14,7 +15,35 @@ bool IsValidCoord(int y, int x)
     if (x >= n) return false;
     return true;
 }
-int dfs(int y, int x, int startY, int startX, int d)
+int bfs(int startY, int startX, int d)
+{
+    queue<pair<int, int>> q;
+    q.push({ startY, startX });
+    bVisited[startY][startX] = true;
+
+    int ret = 1;
+    while (!q.empty())
+    {
+        int curY = q.front().first;
+        int curX = q.front().second;
+        q.pop();
+
+        for (int i = 0; i < 4; ++i)
+        {
+            int newY = curY + dy[i];
+            int newX = curX + dx[i];
+            if (IsValidCoord(newY, newX) && !bVisited[newY][newX] && 
+                abs(grid[newY][newX] - grid[curY][curX]) <= d)
+            {
+                bVisited[newY][newX] = true;
+                q.push({ newY, newX });
+                ++ret;
+            }
+        }
+    }
+    return ret;
+}
+int dfs(int y, int x, int d)
 {
     int ret = 1;
     bVisited[y][x] = true;
@@ -24,9 +53,9 @@ int dfs(int y, int x, int startY, int startX, int d)
         int newX = x + dx[i];
 
         if (IsValidCoord(newY, newX) && !bVisited[newY][newX]
-            && abs(grid[startY][startX] - grid[newY][newX]) <= d)
+            && abs(grid[y][x] - grid[newY][newX]) <= d)
         {
-            ret += dfs(newY, newX, startY, startX, d);
+            ret += dfs(newY, newX, d);
         }
     }
     return ret;
@@ -39,8 +68,6 @@ int main() {
             cin >> grid[i][j];
 
     int nHalf = (n * n + 1) / 2;
-
-    bool bEscape = false;
     int left = 0, right = 1000000;
     int ans = right;
     while (left <= right)
@@ -56,7 +83,7 @@ int main() {
             {
                 if (!bVisited[i][j])
                 {
-                    int nColoredGrid = dfs(i, j, i, j, d);
+                    int nColoredGrid = dfs(i, j, d);
                     maxColorGrid = max(maxColorGrid, nColoredGrid);
                 }  
             }
